@@ -3,6 +3,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using HashidsNet;
+using Microsoft.Extensions.Primitives;
 
 // Encrypt and decrypt specific kind of barcode
 //     Input must be in: 
@@ -10,12 +11,12 @@ using HashidsNet;
 // ABC123-999
 //
 // ABC = name of the product in 3 lettrs
-// 123 = Price of product
-// 999 = ID 
+// 123 = Price of product (x digits)
+// 999 = ID (x digits)
     
     
 using var cts = new CancellationTokenSource();
-TelegramBotClient client = new TelegramBotClient("", cancellationToken:cts.Token );
+TelegramBotClient client = new TelegramBotClient("8080081913:AAHd6dRIxt38bd1uhQLJF_-jNktOG0b1raU", cancellationToken:cts.Token );
 Hashids hasher = new Hashids();
 client.SetMyCommands(new BotCommand[]
 {
@@ -55,26 +56,12 @@ async Task OnMessage(Message message, UpdateType type)
        StringBuilder sb = new StringBuilder();
        int n;
        bool isId = false;
-       foreach (char ch in lower)
-       {
-           if (isId)
-           {
-               sb.Append(hasher.Encode(int.Parse(lower.Split('-')[1])));
-               break;
-           }
-           if (ch == '-')
-           {
-               sb.Append(ch);
-               isId = true;
-               continue;
-           }
-           if (int.TryParse(ch.ToString(), out n))
-           {
-               sb.Append((n + 1).ToString());
-               continue;
-           } 
-           sb.Append(((int)ch - 97).ToString());
-       }
+       var digits = lower.Substring(3, lower.IndexOf('-') - 3);
+       var digitsN = int.Parse(digits) * 70;
+       for (int i = 0; i < 3; i++) sb.Append(((int)lower[i] - 97).ToString());
+       sb.Append(digitsN);
+       sb.Append('-');
+       sb.Append(hasher.Encode(int.Parse(lower.Split('-')[1])));
        await client.SendMessage(message.Chat, $"{sb.ToString()}");
    }
    if (message.ReplyToMessage.Text.Contains("Decrypt"))
@@ -83,12 +70,8 @@ async Task OnMessage(Message message, UpdateType type)
        StringBuilder sb = new StringBuilder();
        for (int i = 0; i < 3; i++) sb.Append((char)(int.Parse(lower[i].ToString())+ 97));
        var digits = lower.Substring(3, lower.IndexOf('-') - 3);
-        digits= digits.Replace("10", "9");
-        foreach (var digit in digits)
-        {
-            sb.Append((int.Parse(digit.ToString())- 1));
-        }
-
+       var digitsN = int.Parse(digits) / 70;
+        sb.Append(digitsN);
         sb.Append('-');
         sb.Append((hasher.Decode(lower.Split('-')[1])[0].ToString()));
        await client.SendMessage(message.Chat, $"{sb.ToString()}");
