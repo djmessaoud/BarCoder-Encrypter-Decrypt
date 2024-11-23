@@ -1,5 +1,5 @@
  Encrypt and decrypt specific kind of barcode
- <br>
+ <br><br>
   Input must be in: 
 
  **ABC123-999**
