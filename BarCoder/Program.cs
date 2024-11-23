@@ -4,8 +4,18 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using HashidsNet;
 
+// Encrypt and decrypt specific kind of barcode
+//     Input must be in: 
+//
+// ABC123-999
+//
+// ABC = name of the product in 3 lettrs
+// 123 = Price of product
+// 999 = ID 
+    
+    
 using var cts = new CancellationTokenSource();
-TelegramBotClient client = new TelegramBotClient("8080081913:AAHd6dRIxt38bd1uhQLJF_-jNktOG0b1raU", cancellationToken:cts.Token );
+TelegramBotClient client = new TelegramBotClient("", cancellationToken:cts.Token );
 Hashids hasher = new Hashids();
 client.SetMyCommands(new BotCommand[]
 {
