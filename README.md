@@ -1,4 +1,4 @@
- Encrypt and decrypt specific kind of barcode
+**Telegram Bot** to  Encrypt and decrypt specific kind of barcode
  <br><br>
   Input must be in: 
 
