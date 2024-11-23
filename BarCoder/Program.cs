@@ -16,7 +16,7 @@ using Microsoft.Extensions.Primitives;
     
     
 using var cts = new CancellationTokenSource();
-TelegramBotClient client = new TelegramBotClient("8080081913:AAHd6dRIxt38bd1uhQLJF_-jNktOG0b1raU", cancellationToken:cts.Token );
+TelegramBotClient client = new TelegramBotClient("", cancellationToken:cts.Token );
 Hashids hasher = new Hashids();
 client.SetMyCommands(new BotCommand[]
 {
